@@ -13,14 +13,17 @@ export const useSimpleDndSort = <T extends MinimalSortableType>(
   return { moveItem };
 };
 
-export const SimpleDndSortElement = <T extends MinimalSortableType>(props: {
+export const SimpleDndSortElement = <
+  C extends HTMLElement,
+  T extends MinimalSortableType
+>(props: {
   item: T;
   index: number;
   children: ReactNode;
   elementName: string;
   onDrag: (dragId: T["id"], hoverId: T["id"]) => void;
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<C>(null);
   const [{ handlerId }, drop] = useDrop<
     MinimalSortableType & { index: number },
     void,
@@ -101,13 +104,9 @@ export const SimpleDndSortElement = <T extends MinimalSortableType>(props: {
   });
 
   drag(drop(ref));
-  return (
-    <div
-      data-handler-id={handlerId}
-      style={isDragging ? { opacity: "0.6" } : {}}
-      ref={ref}
-    >
-      {props.children}
-    </div>
-  );
+  return {
+    "data-handler-id": handlerId,
+    style: { ...(isDragging ? { opacity: "0.6" } : {}) },
+    ref,
+  };
 };
