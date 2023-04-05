@@ -1,10 +1,10 @@
 type MinimalSortableType = { id: string | number };
 export const useSortOnDnd = <T extends MinimalSortableType>(
-  selectedActions: T[],
-  updateAction: (value: T[]) => void
+  selectedItems: T[],
+  updateItems: (value: T[]) => void
 ) => {
   const moveItem = (dragId: T["id"], hoverId: T["id"]) => {
-    sortItems(dragId, hoverId, updateAction, selectedActions);
+    sortItems(dragId, hoverId, updateItems, selectedItems);
   };
 
   return { moveItem };
@@ -15,10 +15,10 @@ export const useSortOnDnd = <T extends MinimalSortableType>(
 function sortItems<T extends { id: string | number }>(
   dragId: T["id"],
   hoverId: T["id"],
-  updateAction: (value: T[]) => void,
-  selectedActions: T[]
+  updateItems: (value: T[]) => void,
+  selectedItems: T[]
 ) {
-  const currentList = selectedActions || [];
+  const currentList = selectedItems || [];
 
   const prevWithRanks = currentList.map((el, index) => ({
     ...el,
@@ -32,7 +32,7 @@ function sortItems<T extends { id: string | number }>(
   });
   console.log("found elements: ", hoveredElement, draggedElement);
   // That's just for TS safety
-  if (!hoveredElement || !draggedElement) return updateAction(currentList);
+  if (!hoveredElement || !draggedElement) return updateItems(currentList);
 
   const hoverIndex = hoveredElement.rank;
   const dragIndex = draggedElement.rank;
@@ -54,7 +54,7 @@ function sortItems<T extends { id: string | number }>(
 
   // Just for TS to ignore the rank field
 
-  return updateAction(newSortedList as unknown as T[]);
+  return updateItems(newSortedList as unknown as T[]);
 }
 
 const findElement = <T extends MinimalSortableType>(
