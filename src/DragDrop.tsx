@@ -17,6 +17,7 @@ export const SimpleDndSortElement = <T extends MinimalSortableType>(props: {
   item: T;
   index: number;
   children: ReactNode;
+  elementName: string;
   onDrag: (dragId: T["id"], hoverId: T["id"]) => void;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -25,7 +26,7 @@ export const SimpleDndSortElement = <T extends MinimalSortableType>(props: {
     void,
     { handlerId: Identifier | null }
   >({
-    accept: "CulturalTag",
+    accept: props.elementName,
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
@@ -90,7 +91,7 @@ export const SimpleDndSortElement = <T extends MinimalSortableType>(props: {
 
   const [{ isDragging }, drag] = useDrag({
     canDrag: () => true,
-    type: "CulturalTag",
+    type: props.elementName,
     item: () => ({ id: props.item.id, index: props.index }),
     collect: (
       monitor: DragSourceMonitor<{ id: string | number; index: number }>
